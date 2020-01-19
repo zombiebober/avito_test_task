@@ -8,7 +8,6 @@ import (
 	_ "github.com/lib/pq"
 	"log"
 	"net/http"
-	"restApiAVITO/api"
 	"strconv"
 	"strings"
 )
@@ -26,7 +25,7 @@ func (a *App)Initialize(host, port, user, password, dbname string)  {
 	if err != nil {
 		log.Fatal(err)
 	}
-	api.createTableAdvert(a.DB)
+	createTableAdvert(a.DB)
 	a.Router = mux.NewRouter().StrictSlash(true)
 	a.initializeRoutes()
 }
@@ -132,7 +131,7 @@ func (a *App) getAllAdverts(w http.ResponseWriter, r *http.Request)  {
 
 	offset := limit * (page -1)
 
-	adverts, err := api.getAllAdverts(a.DB, offset, limit, &sort)
+	adverts, err := getAllAdverts(a.DB, offset, limit, &sort)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
