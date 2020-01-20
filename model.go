@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/lib/pq"
 	_ "github.com/lib/pq"
-	"log"
 	"time"
 )
 
@@ -140,20 +139,4 @@ func (a *Advert) createAdvert(db *sql.DB) error{
 	return nil
 }
 
-
-
-func createTableAdvert(db *sql.DB)  {
-	tableCreationQuery := `CREATE TABLE advert
-	(
-		ID SERIAL PRIMARY KEY,
-		Title text ,
-		Description text,
-		Price numeric,
-		Photo_link text[],
-		time_create timestamp with time zone
-	)`
-	if _, err := db.Exec(tableCreationQuery); err != nil {
-		log.Fatal(err)
-	}
-}
 

@@ -25,13 +25,14 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_HOST=${DB_HOST}
+      - POSTGRES_SSLMODE=${DB_SSLMODE}
     ports:
-      - 5432:5432
+      - '5432:5432'
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/postgresql/data
     networks:
       - test_task
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    restart: always
 
   pgadmin:
     image: dpage/pgadmin4
@@ -53,3 +54,4 @@ volumes:
 
 networks:
   test_task:
+    driver: bridge

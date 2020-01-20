@@ -18,14 +18,16 @@ type App struct {
 }
 
 
-func (a *App)Initialize(host, port, user, password, dbname string)  {
-	connectionString := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s", host, port, user, password, dbname)
+func (a *App)Initialize(host, port, user, password, dbname, sslmode string)  {
+	connectionString := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", host, port, user, password, dbname, sslmode)
 	var err error
+	fmt.Println(connectionString)
 	a.DB, err = sql.Open("postgres", connectionString)
 	if err != nil {
-		log.Fatal(err)
+		//log.Fatal(err)
+		panic(err)
 	}
-	createTableAdvert(a.DB)
+
 	a.Router = mux.NewRouter().StrictSlash(true)
 	a.initializeRoutes()
 }
