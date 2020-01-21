@@ -6,7 +6,7 @@ docker compose up
 Так же есть возможность посмотреть содержимое PostgreSQL c помощью pgAdmin4. Для этого нужно перейти на [localhost:5050](local) с логином live@admin.com
  и паролем password
  
-###Пример работы метода создания объявления:
+### Пример работы метода создания объявления:
 ```
 Request:
     POST http://localhost:8080/advert/
@@ -25,7 +25,7 @@ Response:
 }
 ```
 
-###Метод получения конкретного объявления
+### Метод получения конкретного объявления
 ```
 Request:
     GET http://localhost:8080/advert/1?fields=description,photo_links
@@ -46,7 +46,7 @@ Response:
     }
 ```
  
-###Метод получения списка объявлений
+### Метод получения списка объявлений
 ```
 Request:
     GET http://localhost:8080/adverts/?page=1&sort=time&sort_type=desc
