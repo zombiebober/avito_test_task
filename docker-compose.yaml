@@ -2,6 +2,28 @@ version: '3'
 
 services:
 
+  db:
+    image: postgres:latest
+    container_name: avtio_test_task_db
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_HOST=${DB_HOST}
+      - POSTGRES_SSLMODE=${DB_SSLMODE}
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - db_data:/var/lib/postgresql/data22
+    networks:
+      - test_task
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+
   app:
     container_name: avito_test_task_app
     build: .
@@ -17,22 +39,6 @@ services:
     links:
       - db
 
-  db:
-    image: postgres:latest
-    container_name: avtio_test_task_db
-    environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_HOST=${DB_HOST}
-      - POSTGRES_SSLMODE=${DB_SSLMODE}
-    ports:
-      - '5432:5432'
-    volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-      - db_data:/var/lib/postgresql/data
-    networks:
-      - test_task
 
   pgadmin:
     image: dpage/pgadmin4
@@ -50,7 +56,9 @@ services:
 
 volumes:
   api:
+  docker-entrypoint-initdb.d:
   db_data:
+
 
 networks:
   test_task:

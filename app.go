@@ -24,8 +24,7 @@ func (a *App)Initialize(host, port, user, password, dbname, sslmode string)  {
 	fmt.Println(connectionString)
 	a.DB, err = sql.Open("postgres", connectionString)
 	if err != nil {
-		//log.Fatal(err)
-		panic(err)
+		log.Fatal(err)
 	}
 
 	a.Router = mux.NewRouter().StrictSlash(true)
@@ -89,17 +88,14 @@ func (a *App) getAllAdverts(w http.ResponseWriter, r *http.Request)  {
 	limit := 10
 	var sort Sort
 	params := r.URL.Query()
-	page := 0
-	if p := params.Get("page"); p != ""{
+	page := 1
+	if p := params.Get("page"); p != "" {
 		var err error
 		page, err = strconv.Atoi(p)
-		if page < 1 || err != nil{
-			respondWithError(w, http.StatusBadRequest,"Invalid page")
+		if page < 1 || err != nil {
+			respondWithError(w, http.StatusBadRequest, "Invalid page")
 			return
 		}
-	} else {
-		respondWithError(w, http.StatusBadRequest, "You must enter a page")
-		return
 	}
 
 	if column := params.Get("sort"); column != "" {
@@ -136,6 +132,11 @@ func (a *App) getAllAdverts(w http.ResponseWriter, r *http.Request)  {
 	adverts, err := getAllAdverts(a.DB, offset, limit, &sort)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if len(adverts) < 1 {
+		respondWithError(w, http.StatusNotFound, "Page does not exist")
 		return
 	}
 

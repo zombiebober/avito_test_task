@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/lib/pq"
 	_ "github.com/lib/pq"
-	"time"
 )
 
 
@@ -129,8 +128,8 @@ func getAllAdverts(db *sql.DB, start, count int, sort ISort ) ([]Advert, error) 
 
 func (a *Advert) createAdvert(db *sql.DB) error{
 	err := db.QueryRow(
-		"INSERT INTO advert (title, description, price, photo_link, time_create) VALUES ($1, $2, $3, $4, $5) RETURNING ID",
-		a.Title,a.Description,a.Price, pq.Array(a.PhotoLink), time.Now()).Scan(&a.ID)
+		"INSERT INTO advert (title, description, price, photo_link) VALUES ($1, $2, $3, $4) RETURNING ID",
+		a.Title,a.Description,a.Price, pq.Array(a.PhotoLink)).Scan(&a.ID)
 
 	if err != nil {
 		return err
@@ -138,5 +137,4 @@ func (a *Advert) createAdvert(db *sql.DB) error{
 
 	return nil
 }
-
 
